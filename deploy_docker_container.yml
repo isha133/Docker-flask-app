@@ -1,0 +1,17 @@
+- name: Deploy Flask Application in Docker
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Build Docker image for Flask app
+      command: docker build -t flask-app:latest .
+      args:
+        chdir: /home/ec2-user/flask-app  # Ensures the command runs in the correct directory
+
+    - name: Run Docker container for Flask app
+      command: docker run -d --name flask-app -p 5000:5000 flask-app:latest
